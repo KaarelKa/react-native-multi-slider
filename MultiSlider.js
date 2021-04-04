@@ -35,6 +35,7 @@ export default class MultiSlider extends React.Component {
     customMarkerLeft: DefaultMarker,
     customMarkerRight: DefaultMarker,
     customLabel: DefaultLabel,
+    StepMarkerComponent: null,
     markerOffsetX: 0,
     markerOffsetY: 0,
     markerSize: 0,
@@ -442,7 +443,16 @@ export default class MultiSlider extends React.Component {
     }
   }
 
+  renderCustomStepMarker = ({ style, number, index }) => {
+    const { StepMarkerComponent } = this.props;
+    if (StepMarkerComponent) {
+      return <StepMarkerComponent style={style} number={number} index={index} />;
+    }
+    return <View style={markerStyles} />;
+  }
+
   getSteps() {
+    const CustomStepMarker = this.renderCustomStepMarker;
     const stepLength = this.props.sliderLength / (this.optionsArray.length - 1);
     const textStyles = [
       styles.stepLabel,
@@ -474,7 +484,7 @@ export default class MultiSlider extends React.Component {
           {this.props.showStepMarkers &&
             index !== 0 &&
             index !== this.optionsArray.length - 1 && (
-              <View style={markerStyles} />
+              <CustomStepMarker style={markerStyles} index={index} number={number}/>
             )}
           {this.props.showStepLabels && (
             <Text
