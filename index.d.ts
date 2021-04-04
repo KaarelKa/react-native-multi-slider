@@ -13,7 +13,6 @@ export interface StepsAsProps {
     prefix: string;
     suffix: string;
 }
-
 export interface MarkerProps {
     pressed: boolean;
     pressedMarkerStyle: ViewStyle;
@@ -22,6 +21,12 @@ export interface MarkerProps {
     currentValue: number;
     valuePrefix: string;
     valueSuffix: string;
+}
+
+export interface StepMarkerProps {
+  style: ViewStyle,
+  number: number,
+  index: number,
 }
 export interface LabelProps {
     oneMarkerValue: string | number;
@@ -93,7 +98,7 @@ export interface MultiSliderProps {
     imageBackgroundSource?: string;
     enableLabel?: boolean;
     vertical?: boolean;
-    StepMarkerComponent: React.component;
+    StepMarkerComponent: React.Component<StepMarkerProps>;
 }
 
 export default class MultiSlider extends React.Component<MultiSliderProps> {}

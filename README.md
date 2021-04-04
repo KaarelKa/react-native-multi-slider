@@ -66,12 +66,12 @@ In order to make different styles on markers you can set isMarkersSeparated to t
 
 ### Partial report of the props
 Feel free to contribute to this part of the documentation.
-
-
+style={style} number={number} index={index}
 | Prop name | Default value | Type | Purpouse |
 |:---------------------------------------------------------------------------------:|:-------------------------------------------------------------:|:-----------------:|:---------------------------------------:|
 | values | [0] | array of numbers | Prefixed values of the slider. |
 | onValuesChangeStart | () => {} | function | Callback when the value starts changing |
+| StepMarkerComponent | ({ style, number, index }) => {} | function | Component used for Step marker. style exposed here is the markerStyles composed for regular markers and include the stepMarkerStyle prop |
 | onValuesChange | () => {} | function | Callback when the value changes |
 | onValuesChangeFinish | (values) => {} | function | Callback when the value stops changing |
 | sliderLength | 280 | number | Length of the slider (?) |
