@@ -448,7 +448,7 @@ export default class MultiSlider extends React.Component {
     if (StepMarkerComponent) {
       return <StepMarkerComponent style={style} number={number} index={index} />;
     }
-    return <View style={markerStyles} />;
+    return <View style={style} />;
   }
 
   getSteps() {
