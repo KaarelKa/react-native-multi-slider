@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Text } from 'react-native';
 
 import {
@@ -14,6 +14,67 @@ import {
 import DefaultMarker from './DefaultMarker';
 import DefaultLabel from './DefaultLabel';
 import { createArray, valueToPosition, positionToValue } from './converters';
+
+const StepsComponent = memo(({
+  CustomStepMarker,
+  sliderLength,
+  optionsArray,
+  stepLabelStyle,
+  vertical,
+  trackStyle,
+  stepMarkerStyle,
+  stepsAs,
+  stepStyle,
+  showStepMarkers,
+  showStepLabels,
+  visible,
+}) => {
+  const stepLength = sliderLength / (optionsArray.length - 1);
+  const textStyles = [
+    styles.stepLabel,
+    stepLabelStyle,
+    ...(vertical ? [{ transform: [{ rotate: '90deg' }] }] : []),
+  ];
+  const markerHeight = trackStyle?.height || styles.track.height;
+  const markerStyles = [
+    styles.stepMarker,
+    {
+      height: markerHeight,
+      width: markerHeight,
+      borderRadius: markerHeight / 2,
+    },
+    stepMarkerStyle,
+  ];
+
+  if (!visible) {
+    return null;
+  }
+
+  return optionsArray.map((number, index) => {
+    var step = stepsAs?.[index];
+    return (
+      <View
+        key={number}
+        style={[
+          styles.step,
+          stepStyle,
+          { left: stepLength * index },
+        ]}
+      >
+        {showStepMarkers &&
+          index !== 0 &&
+          index !== optionsArray.length - 1 && (
+            <CustomStepMarker style={markerStyles} index={index} number={number}/>
+          )}
+        {showStepLabels && (
+          <Text
+            style={textStyles}
+          >{`${step.prefix}${step.stepLabel}${step.suffix}`}</Text>
+        )}
+      </View>
+    );
+  });
+})
 
 export default class MultiSlider extends React.Component {
   static defaultProps = {
@@ -451,7 +512,8 @@ export default class MultiSlider extends React.Component {
     return <View style={style} />;
   }
 
-  getSteps() {
+  renderSteps = () => {
+    console.warn("Rendering steps")
     const CustomStepMarker = this.renderCustomStepMarker;
     const stepLength = this.props.sliderLength / (this.optionsArray.length - 1);
     const textStyles = [
@@ -504,9 +566,10 @@ export default class MultiSlider extends React.Component {
       sliderLength,
       markerOffsetX,
       markerOffsetY,
+      showSteps,
     } = this.props;
     const twoMarkers = this.props.values.length == 2; // when allowOverlap, positionTwo could be 0, identified as string '0' and throwing 'RawText 0 needs to be wrapped in <Text>' error
-
+    const CustomStepMarker = this.renderCustomStepMarker;
     const trackOneLength = positionOne;
     const trackOneStyle = twoMarkers
       ? unselectedStyle
@@ -585,7 +648,20 @@ export default class MultiSlider extends React.Component {
               ]}
             />
           )}
-          {this.props.showSteps && this.getSteps()}
+          <StepsComponent
+            visible={showSteps}
+            CustomStepMarker={CustomStepMarker}
+            sliderLength={sliderLength}
+            optionsArray={this.optionsArray}
+            stepLabelStyle={this.props.stepLabelStyle}
+            vertical={this.props.vertical}
+            trackStyle={this.props.trackStyle}
+            stepMarkerStyle={this.props.stepMarkerStyle}
+            stepsAs={this.stepsAs}
+            stepStyle={this.props.stepStyle}
+            showStepMarkers={this.props.showStepMarkers}
+            showStepLabels={this.props.showStepLabels}
+          />
           <View
             style={[
               styles.markerContainer,
